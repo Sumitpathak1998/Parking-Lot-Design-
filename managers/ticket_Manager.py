@@ -38,8 +38,6 @@ class TicketManager :
                 print("cam to this")
                 spot = el;
                 break;
-
-        print("spot",spot);
         if(spot == None) :
             return {"success" : False , "message" : "No Spot Present for this vehicle"};
         else :

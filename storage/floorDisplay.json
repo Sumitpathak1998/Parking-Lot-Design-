@@ -1,1 +1,1 @@
-[{"floor_id": 1, "floor_name": "floor1", "total_spot": {"compact": 1, "large": 0, "handicapped": 0, "motorcycle": 1, "electric": 0}, "occupied_spot": {"compact": 0, "large": 0, "handicapped": 0, "motorcycle": 0, "electric": 0}}]
+[{"floor_id": 1, "floor_name": "floor1", "total_spot": {"compact": 1, "large": 0, "handicapped": 0, "motorcycle": 1, "electric": 0}, "occupied_spot": {"compact": 0, "large": 0, "handicapped": 0, "motorcycle": 1, "electric": 0}}]

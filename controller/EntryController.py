@@ -23,13 +23,15 @@ class EntryController :
         #formate the time in DD-MM-YYYY HH:MM:SS
         entry_time = current_time.strftime("%d-%m-%Y %H:%M:%S");
 
-        ressponse = self.entrySecvice.generateParkingTicket(vehicle_number,vehicle_type[choice_type-1].value,entry_time);
+        response = self.entrySecvice.generateParkingTicket(vehicle_number,vehicle_type[choice_type-1].value,entry_time);
 
-        # ticket_dict = ticket.__dict__;
-        # print("Ticket Info : ");
-        # for el in ticket_dict : 
-        #     print(f"{el} : {ticket[el]}");
-        print(ressponse);
+        if not response["success"] :
+            print(response["message"]);
+        else :
+            ticket_dict = response["data"].__dict__;
+            print("Ticket Info : ");
+            for el in ticket_dict : 
+                print(f"{el} : {ticket_dict[el]}");
 
 
 

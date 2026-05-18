@@ -20,7 +20,6 @@ class EntrySecvice :
         if not spot_res["success"] :
             return spot_res["message"];
 
-        print(spot_res);
         spot_info = spot_res["data"];
         floor_id = spot_info["floor_id"];
         floorSpot = spot_info["id"];
@@ -28,7 +27,7 @@ class EntrySecvice :
         panel_res = FloorManager.fetchEntryAndExitPanel(floor_id);
 
         if not panel_res["success"] :
-            return panel_res["message"];
+            return panel_res;
 
         print(panel_res);
         entry,exit = panel_res["data"].values();
@@ -50,7 +49,7 @@ class EntrySecvice :
         dispaly_res = DisplayManager.updateDisplayBoardWhenSpotOccupiedAndRelase(floor_id,select_spot_type,"occupied");
         print(dispaly_res['message']);
 
-        return ticket;
+        return {"success" : True , "data" : ticket};
 
 
 

@@ -165,7 +165,6 @@ class AdminService :
                 response = {"success" : False , "message" : "Somthing went wrong"};
         else : 
             response = {"success" : False , "message" : "Please check the Id"};
-        print(response);
         return response;
 
     def removeparkingAttendent(self,id) : 
@@ -207,7 +206,6 @@ class AdminService :
         if(check_id) : 
             # Just release the floor from panel
             floor_res = FloorManager.removePanelToFloor(remove_panel_info["floor_id"],id); 
-            print(floor_res);
 
             res = self.adminRepository.remove("panel.json",data);
             if (res["success"]) :
