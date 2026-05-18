@@ -8,14 +8,12 @@ class DisplayBoard :
         self.total_spot = {
             SpotType.COMPACT.value : 0,
             SpotType.LARGE.value : 0,
-            SpotType.HANDICAPPED.value : 0 ,
             SpotType.MOTORCYCLE.value : 0,
             SpotType.ELECTRIC.value : 0
         };
         self.occupied_spot = {
             SpotType.COMPACT.value : 0,
             SpotType.LARGE.value : 0,
-            SpotType.HANDICAPPED.value : 0 ,
             SpotType.MOTORCYCLE.value : 0,
             SpotType.ELECTRIC.value : 0
         };

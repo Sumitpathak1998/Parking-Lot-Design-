@@ -1,1 +1,1 @@
-[{"id": 1, "name": "floor1", "spot": [1, 2], "entryexitpanel": [1, 2], "parkingAttendent": 1}]
+[{"id": 1, "name": "floor1", "spot": [1, 2, 3], "entryexitpanel": [1, 2], "parkingAttendent": 1}, {"id": 2, "name": "floor2", "spot": [], "entryexitpanel": [], "parkingAttendent": null}]

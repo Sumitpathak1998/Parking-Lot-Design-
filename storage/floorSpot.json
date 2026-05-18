@@ -1,1 +1,1 @@
-[{"id": 1, "name": "CF", "spot_type": "compact", "occupied": false, "vehicle": null, "floor_id": 1}, {"id": 2, "name": "DDR", "spot_type": "large", "occupied": false, "vehicle": null, "floor_id": 1}]
+[{"id": 1, "name": "CF", "spot_type": "compact", "occupied": false, "vehicle": null, "floor_id": 1}, {"id": 2, "name": "DDR", "spot_type": "large", "occupied": false, "vehicle": null, "floor_id": 1}, {"id": 3, "name": "TTR", "spot_type": "motorcycle", "occupied": false, "vehicle": null, "floor_id": 1}]
