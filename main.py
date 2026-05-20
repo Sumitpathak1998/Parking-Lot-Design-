@@ -3,6 +3,8 @@ from controller.EntryController import EntryController;
 from controller.ExitController import ExitController;
 from controller.ParkingRateController import ParkingRateController;
 from controller.FloorController import FloorController;
+from controller.ParkingAttendentController import ParkingAttendentController;
+from controller.FloorSpotController import FloorSpotController;
 from models.admin import Admin;
 
 class Main : 
@@ -13,6 +15,8 @@ class Main :
         self.exit = ExitController();
         self.floor = FloorController();
         self.parkingRate = ParkingRateController();
+        self.parkinAttendent = ParkingAttendentController();
+        self.floorSpot = FloorSpotController();
         self.initlizeAdmin();
         self.initlizeParkingLot();
         self.operation();
@@ -67,15 +71,15 @@ class Main :
                 case 1 : 
                     self.floor.addFloor(admin_user);
                 case 2 :
-                    self.admin.createSpot();
+                    self.floorSpot.createSpot(admin_user);
                 case 3 : 
                     self.floor.removeFloor(admin_user);
                 case 4 : 
-                    self.admin.removeParkingSlot();
+                    self.floorSpot.removeParkingSlot(admin_user);
                 case 5 : 
-                    self.admin.addParkingAttendent();
+                    self.parkinAttendent.addParkingAttendent(admin_user);
                 case 6 :
-                    self.admin.removeParkingAttendent();
+                    self.parkinAttendent.removeParkingAttendent(admin_user);
                 case 7 : 
                     self.admin.addPanel();
                 case 8 : 

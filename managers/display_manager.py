@@ -4,21 +4,23 @@ from response import Response;
 class DisplayManager :
 
     @classmethod 
-    def updateDisplayBoardWhenSpotAdd(cls, floor_id,spot_type) :
+    def updateDisplayBoardWhenSpotAddAndRemove(cls, floor_id,spot_type,work_type = "add") :
         data = DataManager.fetchData("floorDisplay.json");
         if (len(data) == 0) :
             return "Floor Display not present";
 
         for display in data :
             if(int(display["floor_id"]) == floor_id) :
-                display["total_spot"][spot_type] += 1;
+                if(work_type == "add") :
+                    display["total_spot"][spot_type] += 1;
+                else : 
+                    display["total_spot"][spot_type] -= 1;
                 break;
 
-        res = DataManager.updateData("floorDisplay.json",data);
-        if(res["success"]) :
-            return "Display Updated"; 
-        else :
-            return res["message"];
+        res : Response = DataManager.updateData("floorDisplay.json",data);
+        if(res.success) :
+            res.message = "Display Update";
+        return res;
 
     @classmethod 
     def updateDisplayBoardWhenSpotRemove(cls, floor_id,spot_type) :

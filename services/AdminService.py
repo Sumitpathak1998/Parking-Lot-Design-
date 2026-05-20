@@ -151,7 +151,7 @@ class AdminService :
             # Now if the spot id is correct and not occupied now go for
             # 1. Update the display board by display manager
 
-            display_res = DisplayManager.updateDisplayBoardWhenSpotRemove(remove_spot_info["floor_id"],remove_spot_info["spot_type"]);
+            display_res = DisplayManager.updateDisplayBoardWhenSpotAddAndRemove(remove_spot_info["floor_id"],remove_spot_info["spot_type"],work_type="remove");
             print(display_res);
 
             # 2. Un-assign spot from the floor by floor Manager

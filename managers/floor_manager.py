@@ -1,23 +1,9 @@
 from managers.data_manager import DataManager;
+from response import Response;
 
 class FloorManager : 
 
     floor_base_path = "floor.json";
-
-    @classmethod
-    def assignNewSpotToFloor(cls, floor_id , spot_id) :
-        data = DataManager.fetchData(cls.floor_base_path);
-
-        for floor in data :
-            if( int(floor["id"]) == floor_id ) :
-                floor["spot"].append(spot_id);
-                break;
-
-        res = DataManager.updateData(cls.floor_base_path,data);
-        if(res["success"]) :
-            return "Spot Added to Floor"; 
-        else :
-            return res["message"];
 
     @classmethod
     def assingFloorToParkingAttendent(cls , floor_id , attendent_id) : 
@@ -28,11 +14,11 @@ class FloorManager :
                 floor["parkingAttendent"] = attendent_id;
                 break;
 
-        res = DataManager.updateData(cls.floor_base_path,data);
-        if(res["success"]) :
-            return "Attendent Added to Floor"; 
-        else :
-            return res["message"];
+        response : Response = DataManager.updateData(cls.floor_base_path,data);
+        if(response.success) :
+            response.message = "Attendent Added to Floor"; 
+
+        return response;
 
     @classmethod
     def assignPanelToFloor(cls,floor_id,panel_id) :
@@ -42,27 +28,31 @@ class FloorManager :
             if( int(floor["id"]) == floor_id ) :
                 floor["entryexitpanel"].append(panel_id);
                 break;
+        
+        response : Response = DataManager.updateData(cls.floor_base_path,data);
+        if(response.success) :
+            response.message = "Panel Added to Floor"; 
 
-        res = DataManager.updateData(cls.floor_base_path,data);
-        if(res["success"]) :
-            return "Panel Added to Floor"; 
-        else :
-            return res["message"];
+        return response;
 
     @classmethod
-    def removeSpotToFloor(cls, floor_id , spot_id) :
+    def removeAndAddSpotToFloor(cls,floor_id,spot_id,work_type) :
         data = DataManager.fetchData(cls.floor_base_path);
 
         for floor in data :
             if( int(floor["id"]) == floor_id ) :
-                floor["spot"].remove(spot_id);
+                if(work_type == "add") :
+                    floor["spot"].append(spot_id);
+                else :
+                    floor["spot"].remove(spot_id);
                 break;
 
-        res = DataManager.updateData(cls.floor_base_path,data);
-        if(res["success"]) :
-            return "Spot Remove to Floor"; 
-        else :
-            return res["message"];
+        response : Response = DataManager.updateData(cls.floor_base_path,data);
+        if(response.success) :
+            response.message = f"Spot {work_type} to Floor"; 
+
+        return response;
+        
 
     @classmethod
     def removeParkingAttendentToFloor(cls, attendent_id) :
@@ -73,11 +63,11 @@ class FloorManager :
                 floor["parkingAttendent"] = None;
                 break;
 
-        res = DataManager.updateData(cls.floor_base_path,data);
-        if(res["success"]) :
-            return "Attendent de-assigm to Floor"; 
-        else :
-            return res["message"];
+        response : Response = DataManager.updateData(cls.floor_base_path,data);
+        if(response.success) :
+            response.message = "Attendent de-assigm to Floor"; 
+
+        return response;
 
     @classmethod
     def removePanelToFloor(cls,floor_id,panel_id) :
@@ -88,11 +78,11 @@ class FloorManager :
                 floor["entryexitpanel"].remove(panel_id);
                 break;
 
-        res = DataManager.updateData(cls.floor_base_path,data);
-        if(res["success"]) :
-            return "Panel Remove to Floor"; 
-        else :
-            return res["message"];
+        response : Response = DataManager.updateData(cls.floor_base_path,data);
+        if(response.success) :
+            response.message = "Panel Remove to Floor"; 
+
+        return response;
 
     @classmethod 
     def fetchEntryAndExitPanel(cls,floor_id) :

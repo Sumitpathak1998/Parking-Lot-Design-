@@ -30,3 +30,6 @@ class FloorRepository :
         if(response.success) : 
             response.message = "Floor Remove from System";    
         return response;
+
+    def fetchData(self,location) :
+        return DataManager.fetchData(location);

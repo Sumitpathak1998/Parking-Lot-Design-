@@ -27,7 +27,7 @@ class FloorService :
             
             return response;
         else : 
-            return Response(403,False,message="Only Admin has access to modify rate");
+            return Response(403,False,message="Only Admin has access to create floor");
     
     def CreateFloorDisplay(self, floor : Floor ) : 
         self.floorRepository.createFloorDisplay(floor);
@@ -37,9 +37,8 @@ class FloorService :
         response : Response;
 
         if(isinstance(user , Admin)) : 
-            #check if any spot assign this floor or not 
-            data = DataManager.fetchData("floor.json");
-
+            #check if any spot assign this floor or not
+            data = self.fetchFloorData(user,"floor.json");
             
             check_id = False;
             for index, floor in enumerate(data,start=0) : 
@@ -60,7 +59,15 @@ class FloorService :
             else : 
                 return Response(400,False,message="Please check the Id");
         else : 
-            return Response(403,False,message="Only Admin has access to modify rate");
+            return Response(403,False,message="Only Admin has access to remove floor");
+
+    def fetchFloorData(self,user,location = "floor.json") :
+        #Only admin can able to fetch the data 
+        if(isinstance(user,Admin)) :
+            return self.floorRepository.fetchData(location);
+        else :
+            return Response(403,False,message="Only Admin has access to fetch Floor info");
+
 
 
         
