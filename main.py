@@ -1,6 +1,9 @@
 from controller.AdminController import AdminController;
 from controller.EntryController import EntryController;
 from controller.ExitController import ExitController;
+from controller.ParkingRateController import ParkingRateController;
+from controller.FloorController import FloorController;
+from models.admin import Admin;
 
 class Main : 
 
@@ -8,6 +11,8 @@ class Main :
         self.admin = AdminController();
         self.entry = EntryController();
         self.exit = ExitController();
+        self.floor = FloorController();
+        self.parkingRate = ParkingRateController();
         self.initlizeAdmin();
         self.initlizeParkingLot();
         self.operation();
@@ -56,14 +61,15 @@ class Main :
             8. Remove Floor Panel
             9. Modify Parking Rate      
             10. Back to Main Menu """);
+            admin_user = Admin(1,"Sumit","sumitpathak");
             select = int(input("Select the Number for Perform Operation : "));
             match select : 
                 case 1 : 
-                    self.admin.addFloor();
+                    self.floor.addFloor(admin_user);
                 case 2 :
                     self.admin.createSpot();
                 case 3 : 
-                    self.admin.removeFloor();
+                    self.floor.removeFloor(admin_user);
                 case 4 : 
                     self.admin.removeParkingSlot();
                 case 5 : 
@@ -74,8 +80,8 @@ class Main :
                     self.admin.addPanel();
                 case 8 : 
                     self.admin.removePanel();
-                case 9 :
-                    self.admin.modifyParkingRate();
+                case 9 : 
+                    self.parkingRate.modifyParkingRate(admin_user);
                 case 10:
                     print("Returning to Main Menu...");
                     break;

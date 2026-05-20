@@ -1,4 +1,5 @@
 import json;
+from response import Response;
 
 class DataManager : 
 
@@ -17,7 +18,7 @@ class DataManager :
         with open(cls.__base_location+location, "w") as file : 
             json.dump(data,file);
 
-        return {"success" : True};
+        return Response(201,True);
 
     @classmethod
     def fetchData(cls,location) -> list :
@@ -48,7 +49,7 @@ class DataManager :
         try : 
             with open(cls.__base_location+location, "w") as file : 
                 json.dump(data,file);
-                return {"success" : True};
+                return Response(200,True);
         except (FileNotFoundError , json.JSONDecodeError) as e : 
-                return {"success" : False , "message" : "Data not Updated" }; 
+                return Response(500,False,"Data Not Updated"); 
         

@@ -1,4 +1,5 @@
 from managers.data_manager import DataManager;
+from response import Response;
 
 class DisplayManager :
 
@@ -47,11 +48,10 @@ class DisplayManager :
                 data.pop(index);
                 break;
 
-        res = DataManager.updateData("floorDisplay.json",data);
-        if(res["success"]) :
-            return "Display Removed"; 
-        else :
-            return res["message"];
+        res : Response = DataManager.updateData("floorDisplay.json",data);
+        if(res.success) :
+            res.message = "Display Removed";
+        return res;
 
     @classmethod 
     def updateDisplayBoardWhenSpotOccupiedAndRelase(cls, floor_id,spot_type,work_type = "occupied") :
