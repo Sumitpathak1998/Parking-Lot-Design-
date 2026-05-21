@@ -1,43 +1,38 @@
 from services.ExitService import ExitService;
+from controller.PaymentController import PaymentController;
+from response import Response;
+from models.user import User;
 
 class ExitController : 
 
     def __init__(self):
         self.exitService = ExitService();
+        self.paymentController = PaymentController();
 
-    def scanAndcalculateCharges(self) :
+    def scanAndcalculateCharges(self,user : User) :
         ticket_id = int(input("Enter the Ticket Id : "));
-        resposne = self.exitService.scanAndcalculateCharges(ticket_id);
+        resposne : Response = self.exitService.scanAndcalculateCharges(user,ticket_id);
 
-        if not resposne["success"] :
-            print(resposne["message"]);
+        if not resposne.success :
+            print(resposne.message);
+            return;
 
-        parking_charges = resposne["data"];
+        parking_charges = resposne.data;
         print(f"Total Parking Charges : {parking_charges}");
-        print("Please the Pay the Amount :");
-        # collect the amount from user 
-        amount = float(input("Enter the Amount : "));
 
-        count = 0;
-        amount_collect_confirm = False;
-        while count < 2 : 
-            if ( amount != parking_charges) :
-                print(f"Amount not matched , Pay Again you have {2-count} chance left : ")
-                amount = float(input("Enter the Amount : "));
-                count += 1;
-            else : 
-                print(f"Amount Received");
-                amount_collect_confirm = True;
-                break;
+        # collect the amount from user
+        payment_res = self.paymentController.make_payment(parking_charges);
             
         # check the amount 
-        if not amount_collect_confirm :
+        if not payment_res.success :
             print("Exit Process Fail");
             print("Please Try Again , Thanks"); 
             return; 
+        else : 
+            print(payment_res.message);
 
-        final_res = self.updateTicketRecordDisplayAndRelaseSpot(amount);
-        if(final_res["success"]) :
+        final_res = self.updateTicketRecordDisplayAndRelaseSpot(payment_res.data);
+        if(final_res.message) :
             print("Payment Completed.");
             print("Thanks Visit Again");
     

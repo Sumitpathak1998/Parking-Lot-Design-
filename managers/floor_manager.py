@@ -21,17 +21,35 @@ class FloorManager :
         return response;
 
     @classmethod
-    def assignPanelToFloor(cls,floor_id,panel_id) :
+    def assignAndRemovePanelToFloor(cls,floor_id,panel_id,work_type) :
         data = DataManager.fetchData(cls.floor_base_path);
 
         for floor in data :
             if( int(floor["id"]) == floor_id ) :
-                floor["entryexitpanel"].append(panel_id);
+                if( work_type == "added") :   
+                    floor["entryexitpanel"].append(panel_id);
+                else :
+                    floor["entryexitpanel"].remove(panel_id);
                 break;
         
         response : Response = DataManager.updateData(cls.floor_base_path,data);
         if(response.success) :
-            response.message = "Panel Added to Floor"; 
+            response.message = f"Panel {work_type} to Floor"; 
+
+        return response;
+
+    @classmethod
+    def removePanelToFloor(cls,floor_id,panel_id) :
+        data = DataManager.fetchData(cls.floor_base_path);
+
+        for floor in data :
+            if( int(floor["id"]) == floor_id ) :
+                floor["entryexitpanel"].remove(panel_id);
+                break;
+
+        response : Response = DataManager.updateData(cls.floor_base_path,data);
+        if(response.success) :
+            response.message = "Panel Remove to Floor"; 
 
         return response;
 
@@ -69,21 +87,6 @@ class FloorManager :
 
         return response;
 
-    @classmethod
-    def removePanelToFloor(cls,floor_id,panel_id) :
-        data = DataManager.fetchData(cls.floor_base_path);
-
-        for floor in data :
-            if( int(floor["id"]) == floor_id ) :
-                floor["entryexitpanel"].remove(panel_id);
-                break;
-
-        response : Response = DataManager.updateData(cls.floor_base_path,data);
-        if(response.success) :
-            response.message = "Panel Remove to Floor"; 
-
-        return response;
-
     @classmethod 
     def fetchEntryAndExitPanel(cls,floor_id) :
         data = DataManager.fetchData(cls.floor_base_path);
@@ -102,9 +105,9 @@ class FloorManager :
                 if (panel["id"] in panel_info) :
                     panel_details[panel["panel_type"]] = panel["id"];
             
-            return {"success" : True , "data" : panel_details };
+            return Response(200,True,data=panel_details);
         else :
-            return {"success" : False , "message" : "Entry and Exit Panel are not Present"};
+            return Response(500,False,"Entry and Exit Panel are not Present");
 
     @classmethod
     def UpdateFloorSpot(cls,spot_id,occupied_type = "assign") :
@@ -121,10 +124,11 @@ class FloorManager :
                 break;
 
         if check :    
-            res = DataManager.updateData("floorSpot.json",data);
-            return {"success" : True , "message" : "Spot Updated"};
+            resposne : Response = DataManager.updateData("floorSpot.json",data);
+            resposne.message = "Spot Updated";
+            return resposne;
         else :
-            return {"success" : False , "message" : "Spot not found"};
+            return Response(500,False,"Spot Not Found");
 
 
 

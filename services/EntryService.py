@@ -1,55 +1,59 @@
-from managers.ticket_Manager import TicketManager;
-from managers.floor_manager import FloorManager;
-from managers.display_manager import DisplayManager;
 from models.ticket import Ticket;
+from models.user import User;
+from models.parkingAttendent import ParkingAttendent;
 from repositories.EntryRepository import EntryRepository;
+from response import Response;
 
 class EntrySecvice :
 
-    entryRepository = EntryRepository();
+    def __init__(self):
+        self.entryRepository = EntryRepository();
 
-    def generateParkingTicket(self,vehicle_num,vehicle_type,entry_time) :
+    def generateParkingTicket(self,user : User,vehicle_num,vehicle_type,entry_time) :
+        
+        if(isinstance(user,ParkingAttendent)) :
 
-        #find the spot type for vehicle
-        spot_type = TicketManager.findSpotTypeForVehicle(vehicle_type);
+            #find the spot type for vehicle
+            spot_type =  self.entryRepository.findSpotTypeForVehicle(vehicle_type);
 
-        # check Spot According to specific spot Type
-        spot_res = TicketManager.selectSpotForVehicle(spot_type);
+            # check Spot According to specific spot Type
+            spotResposne : Response = self.entryRepository.selectSpotForVehicle(spot_type);
 
+            if not spotResposne.success :
+                return spotResposne;
 
-        if not spot_res["success"] :
-            return spot_res["message"];
+            spot_info = spotResposne.data;
+            floor_id = spot_info["floor_id"];
+            floorSpot = spot_info["id"];
 
-        spot_info = spot_res["data"];
-        floor_id = spot_info["floor_id"];
-        floorSpot = spot_info["id"];
+            panelResponse : Response = self.entryRepository.fetchEntryAndExitPanel(floor_id);
 
-        panel_res = FloorManager.fetchEntryAndExitPanel(floor_id);
+            if not panelResponse.success :
+                return panelResponse;
 
-        if not panel_res["success"] :
-            return panel_res;
+            print(panelResponse.message);
 
-        print(panel_res);
-        entry,exit = panel_res["data"].values();
+            entry,exit = (panelResponse.data).values();
 
-        # generate the ticket Id by Ticket Manager
-        ticket_id = TicketManager.generateTicketId();
+            # generate the ticket Id by Ticket Manager
+            ticket_id = self.entryRepository.generateTicketId();
 
-        ticket = Ticket(ticket_id,vehicle_num,vehicle_type,floor_id,floorSpot,entry,exit,entry_time,floorSpot);
-        response =  self.entryRepository.createTicket(ticket);
+            ticket = Ticket(ticket_id,vehicle_num,vehicle_type,floor_id,floorSpot,entry,exit,entry_time,floorSpot);
+            response =  self.entryRepository.createTicket(ticket);
 
-        print(response["message"]);
+            print(response.message);
 
-        # Now After the Ticket generate update the floor Spot 
-        spot_res = FloorManager.UpdateFloorSpot(floorSpot);
-        print(spot_res["message"]);
+            # Now After the Ticket generate update the floor Spot 
+            spot_res = self.entryRepository.UpdateFloorSpot(floorSpot,work_type="assign");
+            print(spot_res.message);
 
-        # And also update the Display Board 
-        select_spot_type = spot_info["spot_type"];  
-        dispaly_res = DisplayManager.updateDisplayBoardWhenSpotOccupiedAndRelase(floor_id,select_spot_type,"occupied");
-        print(dispaly_res['message']);
+            # And also update the Display Board 
+            select_spot_type = spot_info["spot_type"];  
+            dispaly_res = self.entryRepository.updateDisplayBoardWhenSpotOccupiedAndRelase(floor_id,select_spot_type,"occupied");
+            print(dispaly_res.message);
 
-        return {"success" : True , "data" : ticket};
-
+            return Response(200,True,data=ticket);
+        else :
+            return Response(403,False,message="Only Parking attendent has access to generate ticket");
 
 

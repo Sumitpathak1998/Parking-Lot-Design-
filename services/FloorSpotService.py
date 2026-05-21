@@ -17,7 +17,7 @@ class FloorSpotService :
             check_res = DataManager.checkDuplicateData("floorSpot.json" , floorSpot.id);
             
             if(check_res) :
-                return Response(409,False,f"Floor Spot = {floorSpot.id} Already Added"); return "Floor Spot Already Added with same ID";
+                return Response(409,False,f"Floor Spot = {floorSpot.id} Already Added");
 
             response : Response = self.floorSpotRepository.CreateSpot(floorSpot);
 

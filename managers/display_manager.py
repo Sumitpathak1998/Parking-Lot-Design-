@@ -59,7 +59,7 @@ class DisplayManager :
     def updateDisplayBoardWhenSpotOccupiedAndRelase(cls, floor_id,spot_type,work_type = "occupied") :
         data = DataManager.fetchData("floorDisplay.json");
         if (len(data) == 0) :
-            return "Floor Display not present";
+            return Response(500,False,"Floor Display not present");
 
         for display in data :
             if(int(display["floor_id"]) == floor_id) :
@@ -69,8 +69,8 @@ class DisplayManager :
                     display["occupied_spot"][spot_type] -= 1;
                 break;
 
-        res = DataManager.updateData("floorDisplay.json",data);
-        if(res["success"]) :
-            return {"success" : True , "message" : "Display Updated"}; 
-        else :
-            return {"success" : True , "message" : res["message"]} ;
+        response : Response = DataManager.updateData("floorDisplay.json",data);
+        if(response.success) :
+            response.message = "Display Updated";
+        return response; 
+        

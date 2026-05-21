@@ -1,10 +1,9 @@
 from models.vehicleType import VehicleType;
 from models.spotType import SpotType;
-from repositories.EntryRepository import EntryRepository;
+from response import Response;
 
 class TicketManager :
 
-    entryRepository = EntryRepository();
     __vehicle_spot_mapping = {
         VehicleType.CAR : [
             SpotType.COMPACT,
@@ -17,19 +16,17 @@ class TicketManager :
 
     @classmethod
     def findSpotTypeForVehicle(cls,vehicle_type) :
-        print("vehicle_type :" , vehicle_type);
         type =  VehicleType(vehicle_type);
         spot_type = cls.__vehicle_spot_mapping[type];
         return spot_type;
 
     # Here in the method on the basis of SpotTYpe we check empty and what get first that spot id picked 
     @classmethod
-    def selectSpotForVehicle(cls,spot_types) :
+    def selectSpotForVehicle(cls,spot_types,data) :
         spot_type = [spot.value for spot in spot_types];
-        data = cls.entryRepository.fetchSpotData();
 
         if(len(data) == 0) :
-            return {"success" : False , "message" : "No Spot Present"};
+            return Response(500,False,"No Data Present");
     
         spot = None;
         for el in data :
@@ -39,15 +36,14 @@ class TicketManager :
                 spot = el;
                 break;
         if(spot == None) :
-            return {"success" : False , "message" : "No Spot Present for this vehicle"};
+            return Response(400,False,"No Spot Present for this vehicle");
         else :
-            return {"success" : True , "data" : spot};
+            return Response(200,True,data=spot);
 
     # get the latest ticket Id number and inc. by one 
     @classmethod
-    def generateTicketId(cls) :
-        data = cls.entryRepository.fetchTicketData();
-
+    def generateTicketId(cls,data) :
+        
         ticket_id = None;
         if(len(data) == 0) : 
             return 1;
@@ -56,9 +52,7 @@ class TicketManager :
             return ticket_id;
 
     @classmethod
-    def checkTicketStatus(cls,ticket_id) :
-        data = cls.entryRepository.fetchTicketData();
-
+    def checkTicketStatus(cls,ticket_id,data) :
         check = False;
         status = False;
         ticket_info = None;
@@ -71,11 +65,11 @@ class TicketManager :
                     break;
 
         if not check :
-            return {"success" : False , "message" : "Please check the Id Again"};
+            return Response(400,False,"Please check the Id Again");
         elif not status :
-            return {"success" : False , "message" : "For this Ticket Payment completed"};
+            return Response(400,False,"For this Ticket Payment completed");
         else :
-            return {"success" : True , "data" : ticket_info};
+            return Response(200,True,data=ticket_info);
 
 
 

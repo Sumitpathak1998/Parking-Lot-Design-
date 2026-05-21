@@ -1,35 +1,42 @@
 from controller.AdminController import AdminController;
+from controller.ParkingLotController import ParkingLotController;
 from controller.EntryController import EntryController;
 from controller.ExitController import ExitController;
 from controller.ParkingRateController import ParkingRateController;
 from controller.FloorController import FloorController;
 from controller.ParkingAttendentController import ParkingAttendentController;
 from controller.FloorSpotController import FloorSpotController;
+from controller.EntryAndExitPanelController import EntryAndExitController;
 from models.admin import Admin;
+from models.parkingAttendent import ParkingAttendent;
 
 class Main : 
 
     def __init__(self) :
         self.admin = AdminController();
+        self.parkingLot = ParkingLotController();
         self.entry = EntryController();
         self.exit = ExitController();
         self.floor = FloorController();
         self.parkingRate = ParkingRateController();
         self.parkinAttendent = ParkingAttendentController();
         self.floorSpot = FloorSpotController();
+        self.entryExitPanel = EntryAndExitController();
+        self.admin_user = Admin(1,"Sumit","sumitpathak");
+        self.patkingAttendent_user = ParkingAttendent(1,"Sumit");
         self.initlizeAdmin();
         self.initlizeParkingLot();
         self.operation();
     
     #initlize Parking lot
     def initlizeParkingLot(self) :
-        p_lot = self.admin.createParkingLot(1,"P&M Mall Parking");
-        print(p_lot);
+        p_lot = self.parkingLot.createParkingLot(1,"P&M Mall Parking",self.admin_user);
+        print(p_lot.message);
     
     #initlize Admin 
     def initlizeAdmin(self) :
         response = self.admin.createAdmin(1,"Sumit","sumitpath901@gmail.com");
-        print(f"{response}");
+        print(f"{response.message}");
 
     def operation(self) :
         
@@ -65,27 +72,26 @@ class Main :
             8. Remove Floor Panel
             9. Modify Parking Rate      
             10. Back to Main Menu """);
-            admin_user = Admin(1,"Sumit","sumitpathak");
             select = int(input("Select the Number for Perform Operation : "));
             match select : 
                 case 1 : 
-                    self.floor.addFloor(admin_user);
+                    self.floor.addFloor(self.admin_user);
                 case 2 :
-                    self.floorSpot.createSpot(admin_user);
+                    self.floorSpot.createSpot(self.admin_user);
                 case 3 : 
-                    self.floor.removeFloor(admin_user);
+                    self.floor.removeFloor(self.admin_user);
                 case 4 : 
-                    self.floorSpot.removeParkingSlot(admin_user);
+                    self.floorSpot.removeParkingSlot(self.admin_user);
                 case 5 : 
-                    self.parkinAttendent.addParkingAttendent(admin_user);
+                    self.parkinAttendent.addParkingAttendent(self.admin_user);
                 case 6 :
-                    self.parkinAttendent.removeParkingAttendent(admin_user);
+                    self.parkinAttendent.removeParkingAttendent(self.admin_user);
                 case 7 : 
-                    self.admin.addPanel();
+                    self.entryExitPanel.addPanel(self.admin_user);
                 case 8 : 
-                    self.admin.removePanel();
+                    self.entryExitPanel.removePanel(self.admin_user);
                 case 9 : 
-                    self.parkingRate.modifyParkingRate(admin_user);
+                    self.parkingRate.modifyParkingRate(self.admin_user);
                 case 10:
                     print("Returning to Main Menu...");
                     break;
@@ -95,6 +101,7 @@ class Main :
     #perform parkingAttendent Opration
     def parkingAttendentOpeartion(self) :
         
+
         while True : 
             print(""" Start the Opearion of Parking Attendant
               1. Want to Entry the vechicle.
@@ -104,9 +111,9 @@ class Main :
             select = int(input("Enter the Number for Perform Operation : "));
             match select : 
                 case 1 : 
-                    self.entry.generateParkingTicket();
+                    self.entry.generateParkingTicket(self.patkingAttendent_user);
                 case 2 : 
-                    self.exit.scanAndcalculateCharges();
+                    self.exit.scanAndcalculateCharges(self.patkingAttendent_user);
                 case 3:
                     print("Returning to Main Menu...");
                     break;
